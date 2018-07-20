@@ -345,7 +345,7 @@ Bien! , Ahora crearemos nuestra Fabrica de Factorias (Abstract factory) que nos 
     private static String MaderaFactory = "FactoriaMadera";
     private static String HierroFactory = "FactoriaHierro;
     
-    public AbstractFactory obtenFamiliadeObjetos(String Factoria){
+   public static AbstractFactory obtenObjetos(String Factoria){
       if(Factoria.equelasIgnoreCase(MaderaFctory)){
          return new FactoriaDeMadera();
        }else if(Factoria.equalsIgnoreCase(HierroFactory)){
@@ -366,12 +366,13 @@ Bien! , Ahora crearemos nuestra Fabrica de Factorias (Abstract factory) que nos 
      /*Digamos que estamos haciendo nuestra casa y pensamos que en la sala principal se necesita una puerta de madera 
      Llamaremos a la tienda(AbstractFactory) por una puerta de madera y alguien que sepa montar tal tipo de puertas:*/
      
-     FactoryProducer madera = new FactoryProducer("FactoriaMadera");
+     FactoriaDeMadera madera = FactoryProducer.obtenObjetos("FactoriaHierro");
+     
      
      madera.devuelvePuerta();//nos devuelven la puerta del tipo que pedimos, Madera.
      madera.devuelveExpertoCorrespondiente();// Y de igual modo nos devuelven un experto en montar puertas del tipo Madera
      
-     FactoryProducer hierro = new FactoryProducer("FactoriaHierro");
+     FactoriaDeHierro hierro = FactoryProducer.obternObjetos("FactoriaDeMadera");
      
      hierro.devuelvePuerta();//Ahora compramos una puerta de tipo madera para la galeria
      hierro.devuelveExpertoCorrespondiente();//Obviamente necesitaremos a alguien que sepa montar este tipo de puertas.
@@ -381,3 +382,9 @@ Bien! , Ahora crearemos nuestra Fabrica de Factorias (Abstract factory) que nos 
  
  Lo usaremos cuando necesitamos familia de objetos osea objetos que esten relacionados entre si, y como estamos usando el patron Factory
  Method no estamos usando ninguna logica en la clase Cliente.
+ 
+ 
+ :construction_worker: Builder
+ ---
+ 
+ 
