@@ -269,8 +269,9 @@ Programemos un Ejemplo:
    }
 ```
   
-  Como necesitamos un experto que sepa montar puertas crearemos la interfaz ExperoEnPuertas , y como necesitaremos de madera o quizas
-  de hierro creremo implemetaciones que cumplan esos requisitos.
+  Como necesitamos un experto que sepa montar puertas crearemos la interfaz ExperoEnPuertas ,
+  y como necesitaremos que el sepa montar una de madera o quizas
+  de hierro crearemos implemetaciones que cumplan esos requisitos.
   
 ```java
   interface ExpertosEnPuertas{
@@ -294,16 +295,89 @@ Programemos un Ejemplo:
       }
    }
 ```
+
+
+Bien! , Ahora crearemos nuestra Fabrica de Factorias (Abstract factory) que nos hara familia de objetos. Puerta de madera on un carpintero, Una puerta de hierro con un herrero.
+
+
+```java
+
+  interface AbstractFactory{
+      public Puerta devuelvePuerta();
+     
+      public ExpertoenPuertas devuelveExpertoCorrespondiente();
+  }
   
   
+  public class FactoriaDeMadera extends AbstractFactory{
+     
+     @Override
+     public Puerta devuelvePuerta(){// Me da una puerta de madera
+       return new PuertaDeMadera();
+     }
+     
+     @Override
+     public ExpertoenPuertas devuelveExpertoCorrespondiente(){// y tambien me da el experto en montar puertas especialmente de Madera
+       return new ExpertoEnMadera();
+     }
+   
+   
+   public class FactoriaDeHierro extends AbstractFactory{
+     
+     @Override
+     public Puerta devuelvePuerta(){
+       return new PuertaEnHierro();
+     }
+     
+     @Override
+     public ExpertoenPuertas devuelveExpertoCorrespondiente(){
+       return new ExpertoeEnHierro();
+     }
+     
+    }
   
   
+ ```
+  Ahora crearemos una clase que se encargara de llamar a los AbstractFactories dependiendo de si necesitamos puerta de madera con carpintero  o puerta de hierro con el herradero. normalmente a esta clase se le llama FactoryProducer porque produce Factorias.
+ 
+ ```java
+ public class FactoryProducer{
+    private static String MaderaFactory = "FactoriaMadera";
+    private static String HierroFactory = "FactoriaHierro;
+    
+    public AbstractFactory obtenFamiliadeObjetos(String Factoria){
+      if(Factoria.equelasIgnoreCase(MaderaFctory)){
+         return new FactoriaDeMadera();
+       }else if(Factoria.equalsIgnoreCase(HierroFactory)){
+         return new FactoriaDeHierro();
+       }else{
+        return null;
+     }
   
+  }
+ ```
+ Creemos nuestra clase Cliente:
+ 
+ ```java
+  public class Cliente{
   
-  
-  
-  
-  
-  
-  
-```
+   public static void main(String[] args){
+   
+     /*Digamos que estamos haciendo nuestra casa y pensamos que en la sala principal se necesita una puerta de madera 
+     Llamaremos a la tienda(AbstractFactory) por una puerta de madera y alguien que sepa montar tal tipo de puertas:*/
+     
+     FactoryProducer madera = new FactoryProducer("FactoriaMadera");
+     
+     madera.devuelvePuerta();//nos devuelven la puerta del tipo que pedimos, Madera.
+     madera.devuelveExpertoCorrespondiente();// Y de igual modo nos devuelven un experto en montar puertas del tipo Madera
+     
+     FactoryProducer hierro = new FactoryProducer("FactoriaHierro");
+     
+     hierro.devuelvePuerta();//Ahora compramos una puerta de tipo madera para la galeria
+     hierro.devuelveExpertoCorrespondiente();//Obviamente necesitaremos a alguien que sepa montar este tipo de puertas.
+ ```
+ 
+ **Cuando Usarlo?**
+ 
+ Lo usaremos cuando necesitamos familia de objetos osea objetos que esten relacionados entre si, y como estamos usando el patron Factory
+ Method no estamos usando ninguna logica en la clase Cliente.
