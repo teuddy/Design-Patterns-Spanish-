@@ -770,76 +770,9 @@ En Terminos Humanos:
 
 Programemos un ejemplo:
 
-Tenemos que crear un programa el cual tenga que dibujar figuras geometricas:
+Imagina que tiene sun Website y quieres permitirles a lo susuarios customizar el tema de las paginas , como lo harias?, crearias una
+copia de cada pagina por cada tema? **o crearas un tema separado que sea cargado a la pagina deacuerdo con laspreferencias del usuario?**
 
-
-```java
-interface FiguraGeometrica{
-  public String dibujar();
-  public String pintarrojo();
-     
- }
- 
- public class Circulo implements FiguraGeometrica{
- @Override
-   public String dibujar(){
-      return "Dibujar Circulo";
-   }
-   
- @Override
-   public String pintarrojo(){
-      return "Pintando Rojo";
-    }
-   
- }
- 
- public class Rectangulo implements FiguraGeometrica{
-   @Override
-   public String dibujar(){
-     return "Dibujar Rectangulo";
-   }
-   
-    @Override
-   public String pintarrojo(){
-      return "Pintando Rojo";
-    }
- }
- 
- En la aplicacion se necesita que podamos dibujar la figuras de color rojo. Asi que debemos ir a la superclase
-colocar el metodo alli luego crear las implementaciones en sus subclases. Es algo tedioso, hagamoslo implementandoel patron Bridge*
-```
-
-
-```java
-interface Color{
-  public void pintar();
-}
-
-public class Negro implements Color{
-  @Override
-  public String pintar(){
-    return "pintar negro";
-  }
-}
-
-public class Rojo implements Color{
-  @Override
-  public String pintar(){
-
-
-public abstract FiguraGeometrica{
-  
-  abstract void dibujar(Color color);
-  
-}
-
-pulic class Circulo extends FiguraGeometrica{
-
- @Override
- public void dibujar(Color color)
-  
-
-
-```
+https://cloud.githubusercontent.com/assets/11269635/23065293/33b7aea0-f515-11e6-983f-98823c9845ee.png
 
 
