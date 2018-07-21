@@ -26,7 +26,7 @@ que desees.
 + Comportamiento
 
 
-**Patrones De Diseño Creacionales**
+**Patrones Creacionales**
 ---
 
 Lo que dice wikipedia:
@@ -387,4 +387,459 @@ Bien! , Ahora crearemos nuestra Fabrica de Factorias (Abstract factory) que nos 
  :construction_worker: Builder
  ---
  
+ Ejemplo de la vida real:
  
+ >Imagina que vas al McDonals y pides alguna hamburguesa , el personal sin hacerte ninguna pregunta te devuelve tu hamburguesa.
+  esto seria el Simple Factory. Pero que tal si te preguntan que tipo de salsa quieres , carne de res o pollo? . En este caso hay
+  ciertos   pasos a dar en la creacion de tu hamburguesa. Para ello Necesitaremos usar el Builder Pattern.
+ 
+ 
+ En terminos Humanos:
+ 
+ >Cuando queremos construir un objeto complicado en el que hay que tomar en cuenta varios pasos se usa el Builder Pattern.
+ 
+ 
+ Programemos un ejemplo:
+ 
+ 	
+```java
+
+ public class Hamburguesa {
+   private String tipoHamburguesa;
+   private String tipoSalsa;
+   private String tipoCarne;
+   private boolean bebida;
+   private boolean ketchup;
+   
+   public Hamburguesa(HamburguesaBuilder hamburguesaBuilder){
+   
+     this.tipoSalsa = hamburguesaBuilder.tipoSalsa();
+     this.tipoCarne = hamburguesaBuilder.tipoCarne();
+     this.bebida = hamburguesaBuilder.bebida();
+     this.ketchup = hamburguesa.ketchup();
+   }
+   
+   //getters y setters
+   
+   
+   //Ahora crearemos nuestro Builder el encargado de construirnos paso por paso nuestra Hamburguesa
+   
+  interface Builder{
+   public Hamburguesa cocinar();
+  }
+  
+  public class HamburguesaBuilder implements Builder}//concreteBuilder
+  
+    private String tipoHamburguesa;
+    private String tipoSalsa;
+    private String tipoCarne;
+    private boolean bebida;
+    private boolean ketchup;
+    
+    public HamburguesaBuilder(String tipoHamburguesa){
+     this.tipoHamburguesa = tipoHamburguesa;
+    }
+    
+    
+    public HamburguesaBuilder tipoSalsa(String tipoSalsa){
+     this.tipoSalsa = tipoSalsa;
+     return this;
+     }
+     
+     public HamburguesaBuilder tipoCarne(String tipoCarne){
+      this.tipoCarne = tipoCarne;
+      return this;
+     }
+     
+     public HamburguesaBuilder bebida(boolean bebida){
+      this.bebida = bebida;
+      return this;
+     }
+     
+     public HamburguesaBuilder ketchup(boolean Ketchup){
+      this.ketchup = ketchup;
+      return this;
+     }
+     
+     public Hamburguesa cocinar(){
+      return new Hamburguesa(this);
+     }
+     
+
+```
+ 
+Ahora crearemos nuestra clase cliente y veremos como nuestro Builder nos ayuda a crear este objeto hamburguesa.
+
+```java
+
+public class Cliente{
+  
+  public static void main(String[] args){
+   
+   Hamburguesa miAlmuerzo = new HamburguesaBuilder("Wooper")
+             .tipoSalsa("picante")
+             .tipoCarne("pollo")
+             .bebida(true)
+             .ketchup(false)//No me gusta!
+             .cocinar();// Yummy!
+             
+   //Sino utilizaramos el Builder , la creacion del objeto seria mas complicada y en applicaciones grandes es sinonimo de perdida
+   de tiempo, ademas de que es posible que me equivoque en algun parametro del objeto.Ej:
+   
+   Hamburguesa almuerzo2 = new Hambruguesa("Wooper","picante","true","false
+```
+ 
+**Cuando Usarlo?**
+
+Lo usaremos cuando a la hora de crear un objeto se vean implicados varios pasos antes de poder hacerlo. ;D
+ 
+
+
+🐑 Prototype
+---
+
+Ejemplo de la vida "real"
+
+>Se recuerdan de Dolly? la oveja que fue clonada?... Pues ya vemos la intencion del patron, no?. Clonar!'
+
+En terminos Humanos:
+
+> Clonar a un objeto ya existente.
+
+
+Programemos un ejemplo , Clonemos una oveja!.
+
+```java
+
+public abstract Oveja implements Cloneable {
+
+  abstract public String tipoOveja();
+  
+   public Object clone() { 
+     Object clone = null; 
+    try {         
+      clone = super.clone();  
+      
+   }catch (CloneNotSupportedException e) {     
+   e.printStackTrace();      
+        }      
+   return clone;     
+       }  
+   }
+  
+  
+  
+  public class Dolly implements Oveja{
+  
+    @Override
+    public String tipoOveja(){
+      return "Es Dolly";
+    }
+    
+    }
+    
+```
+
+Ya creamos nuestra clase abstracta que implemente la interfaz Cloneable la responsable de clonar objetos, ahora vamos a crear nuestra
+clase cliente y clonemos cuales cientificos!
+
+
+    
+```java
+
+ public class Cliente(
+ 
+    public static void main(String[] args){
+    
+    Dolly primeraOveja = new Dolly();
+    
+    //Ahora vamos a clonar a nuestra oveja!
+    
+    Dolly segundaOveja = primerOveja.clone();
+    
+    }
+}
+    
+```
+
+
+**Cuando Usarlo?**
+
+Usaremos el Patron prototype cuando debemos crear varios objetos con parametros iguales o similares Ej: si creamos una biblioteca
+tal vez tengamos libros de la misma editorial , autor , idioma.... En esos casso el Patron Prototype es muy Util.
+
+
+:one: Singleton
+---
+
+Ejemplo de la vida real:
+
+>Solo puede haber un solo presidente al mismo tiempo en un pais. El presidente es el patron Singleton.
+
+En terminos Humanos:
+
+> Con este patron nos aseguramos que solo un objeto pueda ser creado. Por ejemplo en una aplicacion empresarial se necesita
+una conexion a la base de datos , esta conexion podria ser un Singleton asi que cada vez que necesitemos conectarnos a la base de datos
+usemos ese objeto. Si tenemos muchas conexiones a la base de datos(muchso obetos de conexion) nuestra aplicacion ira muy lenta!.
+
+
+Hay dos tipos de Singletons a uno se le llama "Lazy" y a otro "Eagerly". Hagamos el primero el Early!>
+
+Programemos un ejemplo:
+
+```java
+
+ 
+ public class LazySingleton{
+ 
+ public static final LazySingleton singleton = new LazySingleton();// Creara un objeto de el mismo dede que se ejecute nuestra app
+ //por eso es llamado Lazy Singleton
+ 
+ 
+ private LazySingleton(){}
+ 
+ public static LazySingleton dameInstancia(){
+   return singleton;
+  }
+ 
+ }
+
+```
+
+
+Ahora creemos el Eagerly Singleton.
+
+
+```java
+
+public class EagerlySingleton {
+
+  private static EagerlySingleton eagerly = null;
+  
+  private EagerlySingleton(){}
+  
+  public EagerlySingleton obtenerInstancia(){
+    
+    if(eagerly == null){
+       synchronized(EagerlySingleton.class)//Usamos esto para asegurar que no se peuda crear un objeto en diferentes hilos.
+       eagerly = new eagerly();
+     }
+     return eagerly;
+   }
+ }
+```
+
+**Cuando Usarlo?**
+
+Lo usaremos cuando haya algun objeto que no querramos que se cree mas de una vez en nuestros programas.
+
+
+# Patrones Estructurales:
+
+
+Lo que dice wikipedia:
+
+>Son los patrones de diseño software que solucionan problemas de composición (agregación) de clases y objetos
+
+
+En terminos Humanos:
+
+>Los patrones bajo esta categoria nos ayudaran a hacer componentes de software(elemento de un sistema de software que ofrece un conjunto de servicios, o funcionalidades) de la mejor manera. En fin como nuestras clases y objetos interactuan unos con otros.
+
+
+
+## Patrones bajo La categoria de Estructurales son:
+
++ Adapter  
++ Bridge
++ Composite
++ Decorator
++ Facade
++ Flyweight
++ Proxy
+
+:electric_plug: Adapter
+---
+
+Lo que dice wikipedia:
+
+>El patrón adaptador se utiliza para transformar una interfaz en otra, de tal modo que una clase que no pueda utilizar la primera haga uso de ella a través de la segunda.
+
+
+En terminos humanos:
+
+>Se usa el patron Adapter nos permite envolver un objeto incompatible en un Adapter para hacerlo compatible con otra clase.
+
+
+Programemos un ejemplo:
+
+Craemos un juego con un cazador que cazara Leones Luego utilizaremos el Patron adapter para que pueda cazar otro tipo de animales.
+
+
+```java
+public class Hunter{
+ 
+  public Hunter(Lion lion){
+   lion.roar();
+  }
+}
+
+```
+
+
+Ya tenemos a nuestro cazador ahora Creemos alos diferentes tipos de Leones.
+
+
+
+```java
+
+interface Leon{
+ public void roar();
+}
+
+public class LeonAsiatico{
+
+ @Override
+ public void roar(){
+ ///
+ }
+ 
+}
+
+```
+
+Ahora digamos que queremos agregar a un Lobo al juego para que el cazador los caze, como un lobo no es un Leon. Deberemos usar el patron
+Adapter para Hacer que este objeto incompatible mediante el adapter puedan trabajar juntos.
+
+
+```java
+public class Lobo{
+ 
+  public void Aullar(){
+   //Auh!!!!!1
+  }
+}
+```
+
+Ahora nuestra clase adaptadora
+
+```java
+public class Adapter implements Lion{
+  private Lobo lobo;
+  
+  public Adapter(Lobo lobo){
+   this.lobo = lobo;
+  }
+  
+  @Override
+  public void roar(){
+     lobo.Aullar();
+  }
+}
+```
+
+
+Ahora podremos tener  Lobo en nuestro juego tambien!. Creemos nuestra clase cliente.
+
+
+```java
+
+public class Cliente{
+
+  public static void main(String[] args){
+  
+     Lion leon1 = new Lion();
+     
+     Hunter cazador = new Hunter(leon1);
+     
+     Lobo lobo = new Lobo();
+     
+     cazador = new Hunter(new Adapter(lobo));// aqui usamos al clase adaptadora para hacer que el cazador tambien caze lobos :D
+
+```
+
+
+:bridge_at_night: Bridge
+
+Lo que wikipedia dice:
+
+>El patrón Bridge, también conocido como Handle/Body, es una técnica usada en programación para desacoplar una abstracción de su implementación, de manera que ambas puedan ser modificadas independientemente sin necesidad de alterar por ello la otra.
+
+En Terminos Humanos:
+>Permite que la Abstraccion(metodos abstractos) y la implementacion(clases sobreescriben estos metodos y le dan alguna logica) esten desacopladas pudiendo asi cambiar en tiempo de ejecucion la implementacion del mismo.
+
+Programemos un ejemplo:
+
+Tenemos que crear un programa el cual tenga que dibujar figuras geometricas:
+
+
+```java
+interface FiguraGeometrica{
+  public String dibujar();
+  public String pintarrojo();
+     
+ }
+ 
+ public class Circulo implements FiguraGeometrica{
+ @Override
+   public String dibujar(){
+      return "Dibujar Circulo";
+   }
+   
+ @Override
+   public String pintarrojo(){
+      return "Pintando Rojo";
+    }
+   
+ }
+ 
+ public class Rectangulo implements FiguraGeometrica{
+   @Override
+   public String dibujar(){
+     return "Dibujar Rectangulo";
+   }
+   
+    @Override
+   public String pintarrojo(){
+      return "Pintando Rojo";
+    }
+ }
+ 
+ En la aplicacion se necesita que podamos dibujar la figuras de color rojo. Asi que debemos ir a la superclase
+colocar el metodo alli luego crear las implementaciones en sus subclases. Es algo tedioso, hagamoslo implementandoel patron Bridge*
+```
+
+
+```java
+interface Color{
+  public void pintar();
+}
+
+public class Negro implements Color{
+  @Override
+  public String pintar(){
+    return "pintar negro";
+  }
+}
+
+public class Rojo implements Color{
+  @Override
+  public String pintar(){
+
+
+public abstract FiguraGeometrica{
+  
+  abstract void dibujar(Color color);
+  
+}
+
+pulic class Circulo extends FiguraGeometrica{
+
+ @Override
+ public void dibujar(Color color)
+  
+
+
+```
+
+
