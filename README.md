@@ -773,6 +773,6 @@ Programemos un ejemplo:
 Imagina que tiene sun Website y quieres permitirles a lo susuarios customizar el tema de las paginas , como lo harias?, crearias una
 copia de cada pagina por cada tema? **o crearas un tema separado que sea cargado a la pagina deacuerdo con laspreferencias del usuario?**
 
-https://cloud.githubusercontent.com/assets/11269635/23065293/33b7aea0-f515-11e6-983f-98823c9845ee.png
+![alt text](https://cloud.githubusercontent.com/assets/11269635/23065293/33b7aea0-f515-11e6-983f-98823c9845ee.png "Logo Title Text 1")
 
 
