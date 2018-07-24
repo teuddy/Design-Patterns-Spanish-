@@ -776,3 +776,118 @@ copia de cada pagina por cada tema? **o crearas un tema separado que sea cargado
 ![alt text](https://cloud.githubusercontent.com/assets/11269635/23065293/33b7aea0-f515-11e6-983f-98823c9845ee.png "Logo Title Text 1")
 
 
+Primero hagamos el mal ejemplo , asi entenderemos mejor porque usamos el patron bridge.
+
+```java
+interface Webpage {
+ public String pageType();
+ public String theme();
+}
+
+public class About implements Webpage{
+
+ @Override
+ public String pageType(){
+   return "About";
+ }
+ 
+ @Override
+ public String theme(){
+  //mucho codigo
+  return "Tema por Defecto de About"
+ }
+ 
+ 
+ public class Contact implements Webpage{
+ 
+ @Override
+ public String pageType(){
+   return "Contact";
+ }
+ 
+ @Override
+ public String theme(){
+  return "Tema por Defecto de Contact";
+ }
+}
+
+```
+Bueno ya creamos la interfaz que da abstraccion y las subclases que conforman nuestra pagina.
+Ahora se necesita que los usuarios customizen el theme de cada pagina , por ejemplo Contact puede ser rojo,
+verde.. por igual About puede ser de diferentes colores. el problema aqui es que cuando queremos que la cada
+pagina tenga un comportamiento diferente la solucion que nos provee la herencia es crear una nueva clase
+heredad de nuestras paginas y cambiar la implementacion de theme , pero esta no es la mejor solucion , ya que
+por cada implementacion diferente deberemos crear una subclase. 
+
+Para solucionar este problema usaremos el patron Bridge, su lema es : "Desacoplar la abstraccion de su implementacion", 
+haciendo uso de la composicion veremos como el patron bridge soluciona el problema.
+
+
+```java
+interface Theme{//Interfaz que sera cargada en tiempo de ejecucion a las paginas segun las preferencias del usuario.
+ public String theme();
+}
+
+public class RedTheme implements Theme{
+ @Overide
+ public String theme(){
+   return "Red theme";
+ }
+}
+
+public class Blacktheme implements Theme{
+ @Override
+ public String theme(){
+   return "Black theme";
+ }
+}
+```
+Bien!, Ahora crearemos nuestras Paginas
+
+```java
+abstract public class Webpage{
+
+ protected Theme theme;
+ public Webpage(Theme theme)
+   this.theme = theme;
+ }
+ 
+ public String theme();
+ 
+}
+
+
+public class About extends Webpage{
+ 
+ public About(Theme theme){
+  super(theme);
+ }
+ @Override
+ public String theme(){
+   return super(theme).theme();
+  }
+ }
+ 
+ public class Contacts extends Webpage{
+ 
+ public Contacts(Theme theme){
+  super(theme);
+ }
+ @Override
+ public String theme(){
+   return super(theme).theme();
+ }
+}
+```
+El problema fue solucionado , nuestras paginas ya aceptan cualquier tipo de interfaz dependiendo de las preferencias
+del usuario. Ya no tenemos que crear subclases para crear implementacion ya nuestra implementacion esta desacoplada
+de la abstraccion.
+
+**Cuando Usarlo?**
+
+Lo usaremos cuando esperemos cambios en tiempo de ejecucion.
+
+
+
+
+
