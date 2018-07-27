@@ -889,5 +889,252 @@ Lo usaremos cuando esperemos cambios en tiempo de ejecucion.
 
 
 
+:herb: Composite(Compuesto)
+---
+
+Lo que dice Wikipedia:
+ 
+>El patrón Composite sirve para construir objetos complejos a partir de otros más simples y similares entre sí, gracias a la 
+composición recursiva y a una estructura en forma de árbol.
+
+Esto simplifica el tratamiento de los objetos creados, ya que al poseer todos ellos una interfaz común, se tratan todos de la 
+misma manera. 
+
+En terminos Humanos:
+
+>Es un patron que nos ayudara a componer objetos en forma de arbol. por ejemplo un arbol tiene ramas quizas en algunas ramas
+haya hojas y en alguna otra rama haya mas ramas con mas hojas. 
+
+Haremos un ejemplo que nos ayude a ver la practicidad de este diseño de patron, para ello haremos un sistema de productos 
+unitarios que se venderan por una sola unidad y productos compuestos por ejemplo una canasta con varias cosas dentro.
+
+```java
+/*Se crea esta interfaz para tratar a las clases hijas de la misma manera*/
+public interface IPrecio{//Este es el primer componente de este patron que por cierto se llama "Componente"
+
+double getImporte();//metodo comun que nos devolvera el precio de las clases hijas
+
+}
+```
+
+
+```java
+
+/*Ahora crearemos la clase que definira a los productos unitarios , aquellos indivisibles */
+
+public class ProductosUnitarios implements IPrecio{//LEAF(HOJA)
+
+    private int cantidad;
+    private double precio;
+    public String nombre;
+    public String categoria;
+
+    public ProductosUnitarios(int cantidad, double precio, String nombre, String categoria){
+         
+         this.cantidad = cantidad;
+         this.precio = precio;
+         this.nombre = nombre;
+         this.categoria = categoria;
+    }
+    
+    @Override
+    public double getImporte(){
+       return precio * 0.25;
+    }
+    
+    //Gettes and Setters..
+    
+ }
+```
+
+
+
+
+```java
+
+public class ProductoPeso implements IPrecio{//LEAF(HOJA)
+    
+    private double peso;
+    private double precioPorPeso;
+    private String nombre;
+    private String categoria;
+    
+    
+    public ProductoPeso(double peso , double precioPorPeso , String nombre, String categoria){
+         
+         this.peso = peso;
+         this.precioPorPeso = precioPorPeso;
+         this.nombre = nombre;
+         this.categoria = categoria;
+     }
+     
+    @Override
+    public double getImporte(){ 
+       return precioPorPeso * this.peso;
+     }
+  
+  
+    //Getters and Setters
+  
+}
+
+```java
+
+//Ahora crearemos los productos Compuestos (Composite)
+
+ public class ProductoCompuesto implements IPrecio{
+      //productos que componen el ProductoCompuesto
+     private ArrayList<IPrecio> productos;
+
+
+     public ProductoCompuesto(){
+        productos = new ArrayList<IPrecio>(); 
+      }
+      
+      public void addPorducto(IPrecio item){
+        productos.add(item);
+      }
+      
+      public void removeProducto(IPrecio item){
+        productos.remove(item);
+      }
+      
+      public ArrayList<IPrecio> getProductos(){
+        return productos;
+      }
+      
+      @Override
+      public double getImporte(){
+        return //recorrer el array y devovler el precio de cada producto :D
+      }
+      
+  }
+  
+  
+  public class Pedido extends ProductoCompuesto {
+
+    private String cliente;
+
+    /**
+     * Constructor parametrizado de un pedido.
+     *
+     * @param cliente String nombre del cliente.
+     */
+    public Pedido(String cliente) {
+        super();
+        this.cliente = cliente;
+    }
+
+    /**
+     * Getter del cliente.
+     *
+     * @return String nombre del cliente.
+     */
+    public String getCliente() {
+        return cliente;
+    }
+
+    /**
+     * Setter del cliente.
+     *
+     * @param cliente String nombre del cliente.
+     */
+    public void setCliente(String cliente) {
+        this.cliente = cliente;
+    }
+
+    /**
+     * Metodo para añadir un producto al pedido.
+     *
+     * @param producto IPrecio objeto a añadir que implementa esa interfaz.
+     */
+    @Override
+    public void addProducto(IPrecio producto) {
+        super.addProducto(producto);
+    }
+
+    /**
+     * Metodo para eliminar un producto del pedido.
+     *
+     * @param producto IPrecio objeto a eliminar que implementa esa interfaz.
+     */
+    @Override
+    public void removeProducto(IPrecio producto) {
+        super.removeProducto(producto);
+    }
+
+    /**
+     * Metodo que nos sirve para fijar el numero de unidades de un
+     * ProductoUnitario de nuestro pedido.
+     *
+     * @param producto ProductoUnitario que se desea establecer la cantidad.
+     * @param cantidadFinal int numero de unidades finales que se desean.
+     */
+    public void estableceCantidad(IPrecio producto, int cantidadFinal) {
+        if (producto instanceof ProductoUnitario) {
+            ((ProductoUnitario) super.getProductos().get(super.getProductos().indexOf(producto))).setCantidad(cantidadFinal);
+        }
+    }
+
+    /**
+     * Metodo que establece el peso final de un ProductoPeso.
+     *
+     * @param producto ProductoPeso a establecer el peso final.
+     * @param pesoFinal double peso final del producto.
+     */
+    public void establecePeso(IPrecio producto, double pesoFinal) {
+        if (producto instanceof ProductoPeso) {
+            ((ProductoPeso) super.getProductos().get(super.getProductos().indexOf(producto))).setPeso(pesoFinal);
+        }
+    }
+}
+
+
+```
+
+Ahora creamos la clase cliente
+
+```java
+
+public class CompositePrincipal {
+
+    /**
+     * Metodo main con el desarrollo del ejemplo.
+     *
+     * @param args String[] parametros.
+     */
+    public static void main(String[] args) {
+        //Creamos un nuevo pedido
+        Pedido pedido = new Pedido("SEAS - Estudios Abiertos");
+        //Producto que se vende a peso y a un precio por kilogramo.
+        ProductoPeso jamon = new ProductoPeso(5.0, 10.0, "Jamón Ibérico", "Embutidos");
+        ProductoPeso lomo =
+                new ProductoPeso(0.8, 5.0, "Lomo Ibérico", "Embutidos");
+        //Producto que se vende a un precio por unidad y por un numero de 
+        //unidades determinadas.
+        ProductoUnitario paqueteDeEspaguetis =
+                new ProductoUnitario(3, 1.50, "Paquete de espaguetis", "Pasta");
+        ProductoUnitario vino =
+                new ProductoUnitario(6, 2.25, "Botella de vino", "Vinos");
+        //Producto compuesto de varios productos.
+        ProductoCompuesto cestaDeNavidad = new ProductoCompuesto();
+        //Añadimos los productos individuales al producto compuesto.
+        cestaDeNavidad.addProducto(vino);
+        cestaDeNavidad.addProducto(lomo);
+        //Añadimos los productos al pedido.
+        pedido.addProducto(jamon);
+        pedido.addProducto(paqueteDeEspaguetis);
+        //Mostramos el importe.
+        System.out.println("El importe total es: " + pedido.getImporteTotal());
+        pedido.addProducto(cestaDeNavidad);
+        System.out.println("El importe total es: " + pedido.getImporteTotal());
+    }
+}
+
+
+
+```
+Mas informacion leer http://raulavila.com/2015/04/patron-composite/
+
 
 
